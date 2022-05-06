@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-side-bar',
@@ -16,7 +17,7 @@ export class SideBarComponent implements OnInit {
 
   customOptions: Array<any> = []
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.mainMenu.defaultOptions = [
@@ -66,6 +67,29 @@ export class SideBarComponent implements OnInit {
         router: ['/']
       }
     ]
+  }
+
+  goTo($event: any): void {
+
+    //TODO: Url CON QUERY params solamente
+    //TODO: http://localhost/parametro1?query1=valor1&query2=valor2
+    
+    /* this.router.navigate(['/', 'favorites'], {
+      queryParams: {
+        key1: "value1",
+        key2: "value2",
+        key3: "value3"
+      }
+    }); */
+
+    console.log($event)
+
+    //TODO: Url con parametros solamente
+    //TODO: http://localhost/parametro1/parametro2/parametro3
+
+    
+
+
   }
 
 }
