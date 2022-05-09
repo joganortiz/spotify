@@ -18,10 +18,10 @@
 <!-- ZONE TEMPLATES -->
 
 <ng-template #artistZone>
-    <div class="artist-inside" *ngIf="true">
-        <img [src]="mockCover.cover" alt="" class="cover">
+    <div class="artist-inside" *ngIf="miltimediaService.trackInfo$ | async as mockCover">
+        <img [src]="mockCover?.cover" alt="" class="cover">
         <div class="track-info">
-            <h3 class="track-title">{{mockCover.name}}</h3>
+            <h3 class="track-title">{{mockCover?.name}}</h3>
             <h5 class="track-title sub-title">{{mockCover?.album}}</h5>
         </div>
         <div class="track-like">
@@ -38,9 +38,8 @@
             <button class="arrow btn">
                 <i class="uil uil-previous"></i>
             </button>
-            <button class="play btn ">
-                <i class="uil "></i>
-
+            <button (click)="miltimediaService.togglePlayer()" class="play btn">
+                <i  class="uil {{(state === 'pause') ?'uil-play-circle': 'uil-pause-circle'}}"></i>
             </button>
             <button class="arrow btn ">
                 <i class="uil uil-step-forward "></i>
@@ -48,12 +47,12 @@
         </div>
         <div class="media-linetime ">
 
-            <div class="time ">00</div>
+            <div class="time ">{{miltimediaService.timeElapsed$ | async }}</div>
             <span #progressBar class="time-progress ">
                 <span class="time-progress-live " [style.width]="10 + '%' ">
                 </span>
             </span>
-            <div class="time ">{{99}}</div>
+            <div class="time ">{{miltimediaService.timeRemaining$ | async}}</div>
         </div>
     </div>
 </ng-template>

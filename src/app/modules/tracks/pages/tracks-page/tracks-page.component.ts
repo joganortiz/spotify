@@ -1,22 +1,56 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { TracksModel } from '@core/models/tracks.model';
-import * as dataRaw from '../../../../data/tracks.json'
+import { TrackService } from '@modules/tracks/services/track.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tracks-page',
   templateUrl: './tracks-page.component.html',
   styleUrls: ['./tracks-page.component.css']
 })
-export class TracksPageComponent implements OnInit {
+export class TracksPageComponent implements OnInit, OnDestroy {
 
-  mockTracksList:Array<TracksModel> = [
-  ]
+  tracksTrending: Array<TracksModel> = []
+  tracksRandom:Array<TracksModel> = []
 
-  constructor() { }
+  listaObservers$: Array<Subscription> = []
+
+  constructor(private tracksServices: TrackService) { }
 
   ngOnInit(): void {
-    const {data}:any = (dataRaw as any).default
-    this.mockTracksList = data
+    this.loadDataAll()
+    this.loadDataRandom()
+    /* this.tracksServices.getAllTracks$()
+    .subscribe((response: TracksModel[]) => {
+      this.tracksTrending = response
+      console.log("-------->", response);
+    })
+
+    this.tracksServices.getAllRndom$()
+      .subscribe((response: TracksModel[]) => {
+        this.tracksRandom = response
+        console.log("-------->", response);
+      }) */
   }
 
+  ngOnDestroy(): void {
+    /* this.listaObservers$.forEach(u=> u.unsubscribe()) */
+  }
+
+  async loadDataAll(): Promise<any> {
+    this.tracksTrending = await this.tracksServices.getAllTracks$().toPromise()
+    //this.tracksRandom = await this.tracksServices.getAllTracks$().toPromise()
+    //console.log(' ------- ' , dataRaw)
+    
+  }
+
+  loadDataRandom(): void {
+    this.tracksServices.getAllRndom$()
+      .subscribe((response: TracksModel[]) => {
+        this.tracksRandom = response
+        console.log("-------->", response);
+      }, err =>{
+        alert("Error de conexion")
+      })
+  }
 }
